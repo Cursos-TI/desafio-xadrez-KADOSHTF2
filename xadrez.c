@@ -1,32 +1,80 @@
 #include <stdio.h>
 
-// Desafio de Xadrez - MateCheck
-// Este código inicial serve como base para o desenvolvimento do sistema de movimentação das peças de xadrez.
-// O objetivo é utilizar estruturas de repetição e funções para determinar os limites de movimentação dentro do jogo.
+#define SIZE 8
+
+// Função para exibir o tabuleiro
+void printBoard(int board[SIZE][SIZE]) {
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            printf("%2d ", board[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+}
+
+// Movimentação do Bispo (diagonais)
+void moveBishop(int board[SIZE][SIZE], int x, int y) {
+    for (int i = 1; i < SIZE; i++) {
+        if (x + i < SIZE && y + i < SIZE) board[x + i][y + i] = 1;
+        if (x - i >= 0 && y - i >= 0) board[x - i][y - i] = 1;
+        if (x + i < SIZE && y - i >= 0) board[x + i][y - i] = 1;
+        if (x - i >= 0 && y + i < SIZE) board[x - i][y + i] = 1;
+    }
+}
+
+// Movimentação da Torre (linhas e colunas)
+void moveRook(int board[SIZE][SIZE], int x, int y) {
+    for (int i = 0; i < SIZE; i++) {
+        board[x][i] = 1; // Linha
+        board[i][y] = 1; // Coluna
+    }
+}
+
+// Movimentação da Rainha (combina torre e bispo)
+void moveQueen(int board[SIZE][SIZE], int x, int y) {
+    moveBishop(board, x, y);
+    moveRook(board, x, y);
+}
+
+// Movimentação do Cavalo (padrão "L")
+void moveKnight(int board[SIZE][SIZE], int x, int y) {
+    int moves[8][2] = {
+        {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+        {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
+    };
+    
+    for (int i = 0; i < 8; i++) {
+        int nx = x + moves[i][0];
+        int ny = y + moves[i][1];
+        if (nx >= 0 && nx < SIZE && ny >= 0 && ny < SIZE) {
+            board[nx][ny] = 1;
+        }
+    }
+}
 
 int main() {
-    // Nível Novato - Movimentação das Peças
-    // Sugestão: Declare variáveis constantes para representar o número de casas que cada peça pode se mover.
-
-    // Implementação de Movimentação do Bispo
-    // Sugestão: Utilize uma estrutura de repetição para simular a movimentação do Bispo em diagonal.
-
-    // Implementação de Movimentação da Torre
-    // Sugestão: Utilize uma estrutura de repetição para simular a movimentação da Torre para a direita.
-
-    // Implementação de Movimentação da Rainha
-    // Sugestão: Utilize uma estrutura de repetição para simular a movimentação da Rainha para a esquerda.
-
-    // Nível Aventureiro - Movimentação do Cavalo
-    // Sugestão: Utilize loops aninhados para simular a movimentação do Cavalo em L.
-    // Um loop pode representar a movimentação horizontal e outro vertical.
-
-    // Nível Mestre - Funções Recursivas e Loops Aninhados
-    // Sugestão: Substitua as movimentações das peças por funções recursivas.
-    // Exemplo: Crie uma função recursiva para o movimento do Bispo.
-
-    // Sugestão: Implemente a movimentação do Cavalo utilizando loops com variáveis múltiplas e condições avançadas.
-    // Inclua o uso de continue e break dentro dos loops.
-
+    int board[SIZE][SIZE] = {0};
+    int x = 3, y = 3; // Posição inicial
+    
+    printf("Movimentação do Bispo:\n");
+    moveBishop(board, x, y);
+    printBoard(board);
+    
+    printf("Movimentação da Torre:\n");
+    for (int i = 0; i < SIZE; i++) for (int j = 0; j < SIZE; j++) board[i][j] = 0;
+    moveRook(board, x, y);
+    printBoard(board);
+    
+    printf("Movimentação da Rainha:\n");
+    for (int i = 0; i < SIZE; i++) for (int j = 0; j < SIZE; j++) board[i][j] = 0;
+    moveQueen(board, x, y);
+    printBoard(board);
+    
+    printf("Movimentação do Cavalo:\n");
+    for (int i = 0; i < SIZE; i++) for (int j = 0; j < SIZE; j++) board[i][j] = 0;
+    moveKnight(board, x, y);
+    printBoard(board);
+    
     return 0;
 }
